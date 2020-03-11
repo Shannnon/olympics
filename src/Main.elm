@@ -5,7 +5,7 @@ import Playground exposing (..)
 
 type State
     = RunTheRace Number
-    | MoveToPodium ()
+    | MoveToPodium Number
 
 
 main =
@@ -17,12 +17,12 @@ update _ memory =
     case memory of
         RunTheRace x ->
             if x > 290 then
-                MoveToPodium ()
+                MoveToPodium x
 
             else
                 RunTheRace (x + 3)
 
-        MoveToPodium () ->
+        MoveToPodium _ ->
             memory
 
 
@@ -43,8 +43,16 @@ view computer memory =
             , myPeople time x |> scale 1 |> moveRight 2
             ]
 
-        MoveToPodium () ->
-            [ rectangle red 20 20 ]
+        MoveToPodium x ->
+            [ myRings computer.time x
+                |> scale 0.2
+                |> moveRight 10
+                |> moveUp 100
+                |> moveX (wave 10 -10 10 computer.time)
+            , medalStand |> scale 2 |> moveRight 150
+            , myTrack |> scale 2 |> moveRight 150
+            , myPeople computer.time x |> scale 1 |> moveRight 2
+            ]
 
 
 myPeople time state =
